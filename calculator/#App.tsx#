@@ -1,0 +1,25 @@
+/**
+ * Simple calculator 
+ * https://github.com/facebooksayyid211/calculator/calculator
+ *
+ */
+
+/*import react package*/
+import React, {useState} from 'react';
+
+import {
+  TouchableOpacity
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+/*import mathjs the package for calculations */
+
+import math from 'mathjs';
+
+const Cal = () => {
+
+      
+}
+

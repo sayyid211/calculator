@@ -1,118 +1,107 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * Simple calculator 
+ * https://github.com/facebooksayyid211/calculator/calculator
  *
- * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+/*import react package*/
+import React, {useState} from 'react';
+
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
+  TouchableOpacity,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+/*import math to enable arithmetic operations */
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import math from 'mathjs';
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const Cal = () => {
+  //state variable to store expression to be evaluated
+  const [expression, setExpression] = useState('');
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  // handle button press
+  const handleButtonPress = (value) => {
+    if(value === '='){
+      // return result of math operation
+      getResult();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    }else {
+      //add button value to expression
+      setExpression(expression + value);
+    }
+    
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+  const getResult = () => {
+    try {
+      //compute result using mathjs library
+      const result = math.evaluate(expression);
+      //update expression with the result as string
+      setExpression(result.toSring());
+    } catch (error) {
+      //print error if expression contains error
+      setExpression('Error');
+    }
+  };
+  //buttons array
+  const buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+',
+  ];
+
+  return(
+    <View style={styles.container}>
+      {/*display expression on screen*/}
+      <Text style={styles.expression}>{expression}</Text>
+      <View style={styles.buttonContainer}>
+        {/*map through buttons and give them touchable opacity*/}
+        {
+          buttons.map((button) => (
+            <TouchableOpacity
+            key={button}
+            style={styles.button}
+            onPress={() => handleButtonPress(button)}
+            >
+              {/* display button value*/}
+              <Text style={styles.buttonText}>{button}</Text>
+            </TouchableOpacity>
+          ))
+        }
+      </View>
+    </View>
+  ); 
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sectionTitle: {
+  expression: {
+    fontSize: 36,
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  button: {
+    width: '25%',
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ededed',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  buttonText: {
     fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
   },
 });
-
-export default App;
+export default Cal;
